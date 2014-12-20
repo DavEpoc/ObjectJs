@@ -3,7 +3,7 @@
 class Summoner {
 
 //Api Key
-    private static $Api_Key = <Api_key>;
+    private static $Api_Key = <Api_Key>;
 
 //Inputs
     public $champion;
@@ -17,10 +17,10 @@ class Summoner {
     public static $LimitedApiUsed = 0;
     private static $MatchIndex = 0;
     public static $MatchFound = 0;
-    public static $MatchUsedByCrowler = array();
-    public static $SummonersUsedByCrowler = array();
-// StartCrowler Summoners per role
-    public static $NewSummonerId = "157126"; //Support
+    public static $MatchUsedByCrawler = array();
+    public static $SummonersUsedByCrawler = array();
+// StartCrawler Summoners per role
+    public static $NewSummonerId = "157126"; //Support Baah
 // API variables
     public static $obj;
     public static $obj2;
@@ -37,6 +37,24 @@ class Summoner {
             $this->summoner = $_POST['summoner'];
             $this->NumGamesToCalculate = $_POST['NumGamesToCalculate'];
         }
+    }
+
+    public function StartingSummonerIds() {
+        if ($this->lane === "TOP") {
+            self::$NewSummonerId = "21469743";
+        } //aAa OG Spontexx
+        else if ($this->lane === "MID") {
+            self::$NewSummonerId = "56670514";
+        } //Apdo Dog2
+        else if ($this->lane === "JUNGLE") {
+            self::$NewSummonerId = "19751358";
+        } // kikis
+        else if ($this->lane === "BOT" && $this->lane === "DUO_SUPPORT") {
+            self::$NewSummonerId = "56670514";
+        } //Cloud9 Voidle
+        else if ($this->lane === "BOT" && $this->lane === "DUO_CARRY") {
+            self::$NewSummonerId = "20110160";
+        }; //Zvenillan
     }
 
     public function AverageValue($array) {
@@ -64,7 +82,10 @@ class Summoner {
         if (self::$obj->matches[$a]) {
             return self::$obj->matches[$a]->participants[0]->championId;
         } else {
-            exit("FINE DATI DISPONIBILI");
+            echo "FINE DATI DISPONIBILI";
+            set_time_limit(30);
+            self::$MatchIndex = 0;
+            $this->FindNewSummonerId();
         }
     }
 
@@ -93,8 +114,8 @@ class Summoner {
     public function FindNewSummonerId() {
 
         for ($k = 0; $k <= 9; $k++) {
-            if (!isset(self::$SummonersUsedByCrowler[self::$obj3->participantIdentities[$k]->player->summonerId]) && self::$obj3->participants[$k]->timeline->role === $this->role && substr(self::$obj3->participants[$k]->timeline->lane, 0, 3) === substr($this->lane, 0, 3)) {
-                self::$SummonersUsedByCrowler[self::$obj3->participantIdentities[$k]->player->summonerId] = self::$obj3->participantIdentities[$k]->player->summonerId;
+            if (!isset(self::$SummonersUsedByCrawler[self::$obj3->participantIdentities[$k]->player->summonerId]) && self::$obj3->participants[$k]->timeline->role === $this->role && substr(self::$obj3->participants[$k]->timeline->lane, 0, 3) === substr($this->lane, 0, 3)) {
+                self::$SummonersUsedByCrawler[self::$obj3->participantIdentities[$k]->player->summonerId] = self::$obj3->participantIdentities[$k]->player->summonerId;
                 self::$NewSummonerId = self::$obj3->participantIdentities[$k]->player->summonerId;
                 $this->elocheck();
                 break;
@@ -104,10 +125,9 @@ class Summoner {
         }
     }
 
-    public function FindNewIdCrowlerLogic() {
+    public function FindNewIdCrawlerLogic() {
         for ($j = 14; $j >= 0; $j--) {
-            if (!isset(self::$MatchUsedByCrowler[self::$obj->matches[$j]->matchId])) {
-                self::$MatchUsedByCrowler[self::$obj->matches[$j]->matchId] = self::$obj->matches[$j]->matchId;
+            if (!isset(self::$MatchUsedByCrawler[self::$obj->matches[$j]->matchId]) && self::$obj->matches[$j]->queueType === "RANKED_SOLO_5x5") {
                 $this->RunNewSummonerId($j);
                 break;
             } else {
@@ -119,10 +139,13 @@ class Summoner {
     public function elocheck() {
         $this->RunMatchHistory();
         if (self::$MatchIndex === 0) {
-            $this->FindNewIdCrowlerLogic();
+            $this->FindNewIdCrawlerLogic();
         }
 
         for ($i = 14; $i >= 0; $i--) {
+            if (self::$obj->matches[$i]) {
+                self::$MatchUsedByCrawler[self::$obj->matches[$i]->matchId] = self::$obj->matches[$i]->matchId;
+            }
             echo "</br>  " . (-$i + self::$MatchIndex + 15) . "°)  ";
             if ($this->FindInputChampionId() === $this->FindOthersChampionId($i) && self::$obj->matches[$i]->queueType === "RANKED_SOLO_5x5") {
                 self::$MatchFound = self::$MatchFound + 1;
@@ -149,6 +172,7 @@ class Summoner {
 $result = new Summoner;
 echo "</br> Elo: ";
 if ($result->champion != "" && $result->NumGamesToCalculate != "") {
+    $result->StartingSummonerIds();
     $result->RunInputChampionId();
     $result->elocheck();
 }
@@ -172,7 +196,7 @@ echo Summoner::$MatchFound;
             window.onload = function start() {
                 var ChampionNames = "Aatrox,Ahri,Akali,Alistar,Amumu,Anivia,Annie,Ashe,Azir,Blitzcrank,Brand,Braum,Caitlyn,Cassiopeia,Cho'Gath,Corki,Darius,Diana,Dr. Mundo,\
         Draven,Elise,Evelynn,Ezreal,Fiddlesticks,Fiora,Fizz,Galio,Gangplank,Garen,Gnar,Gragas,Graves,Hecarim,Heimerdinger,Irelia,Janna,\
-        Jarvan IV,Jax,Jayce;Jinx,Kalista,Karma,Karthus,Kassadin,Katarina,Kayle,Kennen,Kha'Zix,Kog'Maw,LeBlanc,Lee Sin,Leona,Lissandra,Lucian,\
+        JarvanIV,Jax,Jayce,Jinx,Kalista,Karma,Karthus,Kassadin,Katarina,Kayle,Kennen,Kha'Zix,Kog'Maw,LeBlanc,Lee Sin,Leona,Lissandra,Lucian,\
         Lulu,Lux,Malphite,Malzahar,Maokai,Master Yi,Miss Fortune,Mordekaiser,Morgana,Nami,Nasus,Nautilus,Nidalee,Nocturne,Nunu,\
         Olaf,Orianna,Pantheon,Poppy,Quinn,Rammus,Rek'Sai,Renekton,Rengar,Riven,Rumble,Ryze,Sejuani,Shaco,Shen,Shyvana,Singed,Sion,Sivir,\
         Skarner,Sona,Soraka,Swain,Syndra,Talon,Taric,Teemo,Thresh,Tristana,Trundle,Tryndamere,Twisted Fate,Twitch,Udyr,\
@@ -199,7 +223,7 @@ echo Summoner::$MatchFound;
 
         <h1>Elo FormCheck</h1>
 
-        <form action="elo11.php" method="post">
+        <form action="EloLol.php" method="post">
 
             <label for="champion">Champion:</label>
             <select name="champion" id="Champion"></select>
