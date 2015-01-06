@@ -4,6 +4,7 @@ class Summoner {
 
 //Api Key
     private static $Api_Key = <Api_Key>;
+
 //Inputs
     public $champion;
     public $role;
@@ -31,7 +32,7 @@ class Summoner {
 
     public $Deaths = array();
 
-    public function __construct() {
+    public function GetInputs() {
         if (count($_POST) > 0) {
             $this->champion = $_POST['champion'];
             $this->role = implode(",", $_POST['role']);
@@ -193,6 +194,7 @@ class Summoner {
 
 $result = new Summoner;
 echo "</br> Elo: ";
+$result->GetInputs();
 if ($result->champion != "" && $result->NumGamesToCalculate != "") {
     $result->StartingSummonerIds();
     $result->RunInputChampionId();
@@ -253,7 +255,7 @@ echo Summoner::$MatchFound;
 
         <h1>Elo FormCheck</h1>
 
-        <form action="elo21.php" method="post">
+        <form action="EloLol2.php" method="post">
 
             <label for="usedrank">UsedRank:</label>
             <select id="usedrank" multiple size="3" name="usedrank[]">
