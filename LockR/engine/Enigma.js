@@ -216,6 +216,16 @@ Enigma.prototype.Result = function() {
 //each desired letter
 Enigma.prototype.ChangeEnigma = function(change, repeat) {
 
+    //Some Library to change ALL letters
+    if (change === "ALL")
+    {
+        var k = [];
+        for (j = 0; j < this.passlength; j++) {
+            k[j] = j + 1;
+        }
+        change = k.join("_");
+    }
+
     var allchange = String(change).split("_");
     var allrepeat = String(repeat).split("_");
 
