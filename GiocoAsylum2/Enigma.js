@@ -210,7 +210,7 @@ Enigma.prototype.MakeEnigma = function(passlength, alphabet, startanswer) {
 };
 // returns true if answer is right,false otherwise
 Enigma.prototype.Result = function() {
-    return this.ActualAnswer === this.password ? true : false;
+    return this.ActualAnswer === this.password;
 };
 //changes the ActualAnswer value rotating each possible alphabet element for
 //each desired letter
