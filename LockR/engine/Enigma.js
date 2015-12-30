@@ -274,6 +274,10 @@ Enigma.prototype.ChangeEnigma = function(change, repeat) {
  from graphical implementation and verify if ActualAnswer is correct
  */
 
+var Enigma_0 = new Enigma(3, 4, "3_2_3", "1_1_1");
+Enigma_0.ChangeEnigma("ALL", "3_2");
+Enigma_0.Result();
+
 //var Enigma_1 = new Enigma(3, 4, "3_2_3", "1_1_1");
 //Enigma_1.ChangeEnigma("1_2_3", "3_2_5");
 //Enigma_1.Result();
