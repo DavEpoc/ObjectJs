@@ -29,8 +29,27 @@
                 var d = 10;
                 var f = document.body;
                 f.style.cssText = "-webkit-transform-style: preserve-3d; -webkit-transform:rotateY(40deg);";
-                var a = Array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J");
+                var a = Array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
                 var b = a.length;
+
+
+                // Compute angle step (a single rotation tick)
+                var angleStep = 360 / b;
+
+                // Generate <style></style> element
+                var style = document.createElement("style");
+                style.type = 'text/css';
+
+                // Generate @keyframes elements
+                for (var i = 0; i < b; i++) {
+                    style.innerHTML += '@keyframes rotate' + i + 'to' + (i+1) + ' {\n' +
+                            '\t0% { transform: rotateX(' + (i * angleStep) + 'deg); }\n' +
+                            '\t100% { transform: rotateX(' + ((i + 1) * angleStep) + 'deg); }\n' +
+                            '}\n';
+                }
+
+                // Add <style></style> element to <head></head> element
+                document.getElementsByTagName('head')[0].appendChild(style);
 
                 for (k = 0; k < d; k++) {
 
