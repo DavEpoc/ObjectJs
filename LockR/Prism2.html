@@ -1,4 +1,5 @@
 <!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -15,148 +16,122 @@
             };
         </script>
 
-        <script type="text/javascript" defer="true" src="Enigma34end.js"></script>
+        <script type="text/javascript" defer="true" src="engine/Enigma.js"></script>
         <script type="text/javascript">
 
-            /* soluzione per una sola lettera con
-
-             div {
-             position: absolute; // NECESSARIO
-             top: 50px; //posiziona solo il tutto piu' in basso
-             text-align:center;
-             width:30px; // necessario per rendere efficiente text-align
-             }
-
-             e tanti div quanti i caratteri possibili,ben centrato se n è pari
-             */
 //var a Enigma_1.PossibleAnswer[0]; // anche [0] sarà in un ciclo for
 //dato che devo farlo anche per le altre lettere.
 
 //var d = Enigma_1.passlength
 
             window.onload = function() {
-                ARRgetDOMelements = [];
-                ARRgetDOMzIndex = [];
+                var getDOMelements = [];
+                var getDOMzIndex = [];
                 var d = 10;
-                var f = document.body;
+                document.body.innerHTML = document.body.innerHTML + '<div id="Prism"></div>';
+                var f = document.getElementById("Prism");
                 f.style.cssText = "-webkit-transform-style: preserve-3d; -webkit-transform:rotateY(40deg);";
-                var a = Array("1", "2", "3", "4", "5");
+                var a = Array("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J");
                 var b = a.length;
 
-                for (kk = 0; kk < d; kk++) {
-                    f.innerHTML = f.innerHTML + '<div id="Letter' + kk + '"></div>';
-                    var e = document.getElementById('Letter' + kk);
 
-                    var g = 150 * (kk + 1);
-//e.style.top = g + "px";
+                for (k = 0; k < d; k++) {
+
+                    f.innerHTML = f.innerHTML + '<div id="Letter' + k + '"></div>';
+
+                    var e = document.getElementById('Letter' + k);
+
                     e.style.width = "30px";
                     e.style.height = "50px";
                     e.style.marginLeft = "40px";
                     e.style.position = "relative";
                     e.style.float = "left";
 
-                    ARRgetDOMelements[kk] = [];
-                    ARRgetDOMzIndex[kk] = [];
+                    getDOMelements[k] = [];
+                    getDOMzIndex[k] = [];
+                    for (i = 0; i <= b; i++) {
+                        e.innerHTML = e.innerHTML + '<div id="zIndex' + k + '_' + i + '"><div id="Element' + k + '_' + i + '">' + a[i % b] + '</div></div>';
 
-                    for (ii = 0; ii < b; ii++) {
-                        e.innerHTML = e.innerHTML + '<div id="zIndex' + kk + '_' + ii + '"><div id="Element' + kk + '_' + ii + '">' + a[ii] + '</div></div>';
-
-                        ARRgetDOMelements[kk][ii] = document.getElementById('Element' + kk + '_' + ii);
-                        ARRgetDOMzIndex[kk][ii] = document.getElementById('zIndex' + kk + '_' + ii);
-
-
-
-                        (ARRgetDOMelements[kk][ii]).style.position = "absolute";
-                        (ARRgetDOMelements[kk][ii]).style.textAlign = "center";
-                        (ARRgetDOMelements[kk][ii]).style.cssText = "top:350px;position:absolute; width: 40px !important; height: 50px !important; font-size: 250%;box-sizing: border-box; border: 1px solid red; background-color:yellow; text-align:center; line-height:50px; ";
-                        (ARRgetDOMzIndex[kk][ii]).style.zIndex = -Math.abs((ii - b / 2 + (b % 2) / 2) * 10 * b - ii);
-                        (ARRgetDOMzIndex[kk][ii]).style.position = 'relative';
-
-
+                        var element = document.getElementById('Element' + k + "_" + i);
+                        var zIndex = document.getElementById('zIndex' + k + "_" + i);
+                        getDOMelements[k].push(element);
+                        getDOMzIndex[k].push(zIndex);
                     }
                 }
+                ;
+
+
 
 
                 for (k = 0; k < d; k++) {
 
                     var u = 0;
-                    var v = 0;
                     var w = 0;
-                    var z = 0;
-
-                    var r = 0;
                     var o = 0;
-                    var n = 0;
-                    var m = 0;
-                    for (i = 0; i < b; i++) {
+                    var r = 0;
 
-//ARRgetDOMelements[k][i] = document.getElementById('Element'+ k+ "_"+ i);
-//ARRgetDOMzIndex[k][i]   = document.getElementById('zIndex'+ k+ "_"+ i);
+                    for (i = 0; i <= b; i++) {
 
-                        var angle = (i - b / 2) * (360 / b) + (180 / b) * (b % 2);
+                        var angle = i * (360 / b);
 
-//var l = document.getElementById('Element'+ k+ "_"+ i);
-//var q = document.getElementById('zIndex'+ k+ "_"+ i);
+                        var l = document.getElementById('Element' + k + "_" + i);
+                        var q = document.getElementById('zIndex' + k + "_" + i);
 
+                        l.style.cssText = "top:300px;position:absolute; width: 40px !important; height: 50px !important; font-size: 250%;box-sizing: border-box; border: 1px solid red; background-color:yellow; text-align:center; line-height:50px; ";
+                        l.style.transition = "-webkit-transform 2s linear";
+                        q.style.zIndex = Math.abs((i - b / 2 + (b % 2) / 2) * 10 * b - i);
+                        q.style.position = 'relative';
 
-                        if (angle < 180 && angle >= 0) {
-                            w = w + (-50) * (1 - Math.cos(angle * (Math.PI / 180)));
-                            u = w - ((-50) / 2) * (1 - Math.cos(angle * (Math.PI / 180))) + i * 50 - z - 50 * (1 - (b % 2));// -2*((b/360)*angle);
+                        w = w + (-50) * (1 + Math.cos(angle * (Math.PI / 180)));
+                        u = w - ((-50) / 2) * (1 + Math.cos(angle * (Math.PI / 180))) + i * 50;
 
-                            o = o + (50) * (Math.sin((0 + angle) * (Math.PI / 180)));
-                            r = o - ((50) / 2) * (Math.sin((0 + angle) * (Math.PI / 180))) + n;// +2*((b/360)*angle);
-//console.log("a" + (i + 1));
-                            (ARRgetDOMelements[k][i]).style.webkitTransform = 'translateZ(' + r + 'px) translateY(' + u + 'px) rotateX(' + angle + 'deg)';
-                        }
+                        o = o + (50) * (Math.sin(angle * (Math.PI / 180)));
+                        r = o - ((50) / 2) * (Math.sin(angle * (Math.PI / 180)));
 
-                        if (angle < 0 && angle >= -180) {
-                            z = z + (50) * (1 + Math.cos(angle * (Math.PI / 180))); // 2*i -b/2
-                            v = z - ((50) / 2) * (1 + Math.cos(angle * (Math.PI / 180))) - i * 50;// -2*i;
-
-                            n = n + (-50) * (Math.sin((180 + angle) * (Math.PI / 180)));
-                            m = n - ((-50) / 2) * (Math.sin((180 + angle) * (Math.PI / 180)));//-2*((b/360)*angle);
-//console.log(i + 1);
-                            (ARRgetDOMelements[k][i]).style.webkitTransform = 'translateZ(' + m + 'px) translateY(' + v + 'px) rotateX(' + angle + 'deg)';
-                        }
-                        (ARRgetDOMelements[k][i]).style.transition = "-webkit-transform 2s linear";
-
+                        l.style.webkitTransform = 'translateZ(' + r + 'px) translateY(' + u + 'px) rotateX(' + (360 - angle) + 'deg)';
                     }
-//var firstvalueId = document.getElementById('Element'+ k+ "_0");
-                    (ARRgetDOMelements[k][0]).style.webkitTransform = (ARRgetDOMelements[k][0]).style.webkitTransform.concat(" rotateX(360deg)");
+                    var firstvalueId = document.getElementById('Element' + k + "_0");
+                    firstvalueId.style.visibility = "hidden";
                 }
-
 
 
 
                 f.innerHTML = f.innerHTML + "<div style='cursor:pointer; width:200px; height:50px; background-color:green; position:absolute; margin-top:500px; line-height:50px; text-align:center;' id='rotate'> CLICK ME </div>";
 
+                var clock = 0;
                 document.getElementById("rotate").onclick = function rotate()
                 {
 
-                    for (k = 0; k < d; k++) {
-                        var firstvalue = ARRgetDOMelements[k][0].style.cssText;
-                        var firstvaluezIndex = ARRgetDOMzIndex[k][0].style.cssText;
+                    for (k = 0; k < d; k++) {//console.log(DOMelements[k][i].getComputedStyle);
+                        var firstvalue = getDOMelements[k][0].style.cssText;
+                        var firstvaluezIndex = getDOMzIndex[k][0].style.cssText;
 
-                        for (i = 0; i < b; i++) {
+                        for (i = 0; i <= b; i++) {
 
-                            if (i != (b - 1)) {
-                                console.log(ARRgetDOMelements[k][(i + 1) % b].style.cssText);
-                                ARRgetDOMzIndex[k][i].style.cssText = ARRgetDOMzIndex[k][(i + 1) % b].style.cssText;
-                                ARRgetDOMelements[k][i].style.cssText = ARRgetDOMelements[k][(i + 1) % b].style.cssText;
+
+
+                            if (i != b) {
+
+                                getDOMzIndex[k][i].style.cssText = getDOMzIndex[k][(i + 1)].style.cssText;
+                                getDOMelements[k][i].style.cssText = getDOMelements[k][(i + 1)].style.cssText;
 
                             }
                             else {
 
-                                ARRgetDOMzIndex[k][i].style.cssText = firstvaluezIndex;
-                                ARRgetDOMelements[k][i].style.cssText = firstvalue;
+                                getDOMelements[k][(b + 1 - clock) % (b + 1)].innerHTML = getDOMelements[k][b - clock].innerHTML;
+                                getDOMelements[k][b - clock].style.visibility = "hidden";
+
+                                getDOMzIndex[k][i].style.cssText = firstvaluezIndex;
+                                getDOMelements[k][i].style.cssText = firstvalue;
+
                             }
 
 
                         }
                     }
+                    clock = (clock + 1) % (b + 1);
 
-
-                };
+                }
 
             };
 
